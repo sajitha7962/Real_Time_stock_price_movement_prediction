@@ -1,0 +1,32 @@
+<h1>Admin Dashboard</h1>
+
+<h2>Users</h2>
+<ul>
+{% for user in users %}
+<li>{{ user[0] }}</li>
+{% endfor %}
+</ul>
+
+<h2>Search History</h2>
+
+<table border="1">
+<tr>
+    <th>User</th>
+    <th>Stock</th>
+    <th>Price</th>
+    <th>Prediction</th>
+    <th>Confidence</th>
+    <th>Date</th>
+</tr>
+
+{% for row in history %}
+<tr>
+    <td>{{ row[0] }}</td>
+    <td>{{ row[1] }}</td>
+    <td>{{ row[2] }}</td>
+    <td>{{ row[3] }}</td>
+    <td>{{ row[4] }}</td>
+    <td>{{ row[5] }}</td>
+</tr>
+{% endfor %}
+</table>

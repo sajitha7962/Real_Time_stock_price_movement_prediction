@@ -105,3 +105,14 @@ def reset_db():
     cur.execute("DROP TABLE IF EXISTS users")
     cur.execute("DROP TABLE IF EXISTS history")
     conn.commit()
+def get_all_users():
+    cur.execute("SELECT username FROM users")
+    return cur.fetchall()
+
+def get_all_history():
+    cur.execute("""
+        SELECT username, stock, price, prediction, confidence, date
+        FROM history
+        ORDER BY date DESC
+    """)
+    return cur.fetchall()
