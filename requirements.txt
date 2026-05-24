@@ -1,0 +1,11 @@
+Flask==2.3.3
+gunicorn
+yfinance
+pandas
+numpy
+scikit-learn
+xgboost
+plotly
+textblob
+requests
+ta

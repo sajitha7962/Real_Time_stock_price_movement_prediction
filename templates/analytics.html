@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Analytics - StockAI</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+
+<body class="analytics-body">
+
+<div class="analytics-container">
+<a href="/" class="back-btn">⬅ Back to Dashboard</a>
+    <h1>📊 Analytics Dashboard</h1>
+    <br>
+
+    <!-- CARDS -->
+    <div class="analytics-cards">
+        <div class="card">🎯 Accuracy <br><b>{{ accuracy }}%</b></div>
+        <div class="card">📈 Trend <br><b>{{ trend }}</b></div>
+        <div class="card">🔥 Activity <br><b>{{ activity }}</b></div>
+    </div>
+
+    <!-- PRICE vs PREDICTION -->
+    <div class="chart-box">
+        <h3>📈 Price vs Prediction</h3>
+        <div id="priceChart"></div>
+    </div>
+
+    <!-- SENTIMENT -->
+    <div class="chart-box">
+        <h3>🧠 Market Sentiment</h3>
+        <div id="sentimentChart"></div>
+    </div>
+
+</div>
+
+<script>
+    // SAFE DATA (avoid crash if empty)
+    var dates = {{ dates|default([])|safe }};
+    var prices = {{ prices|default([])|safe }};
+    var predictions = {{ predictions|default([])|safe }};
+
+    // PRICE CHART
+    var trace1 = {
+        x: dates,
+        y: prices,
+        type: 'scatter',
+        name: 'Actual'
+    };
+
+    var trace2 = {
+        x: dates,
+        y: predictions,
+        type: 'scatter',
+        name: 'Prediction'
+    };
+
+    Plotly.newPlot('priceChart', [trace1, trace2]);
+
+    // SAFE SENTIMENT
+    var positive = {{ sentiment.positive if sentiment else 50 }};
+    var negative = {{ sentiment.negative if sentiment else 50 }};
+
+    var data = [{
+        values: [positive, negative],
+        labels: ['Positive', 'Negative'],
+        type: 'pie'
+    }];
+
+    Plotly.newPlot('sentimentChart', data);
+</script>
+
+</body>
+</html>

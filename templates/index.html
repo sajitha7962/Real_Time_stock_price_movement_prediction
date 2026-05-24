@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>StockAI Pro</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Plotly -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- ================= SIDEBAR ================= -->
+    <div class="sidebar">
+
+        <h2>📈 StockAI</h2>
+
+        <a href="/">🏠 Dashboard</a>
+        <a href="/analytics">📊 Analytics</a>
+        <a href="/history">📜 History</a>
+        <a href="/about">ℹ️ About</a>
+        <a href="/logout">🚪 Logout</a>
+
+    </div>
+
+    <!-- ================= MAIN ================= -->
+    <div class="main">
+
+        <!-- TOPBAR -->
+        <div class="topbar">
+
+            <form method="POST">
+
+                <input
+                    name="stock"
+                    placeholder="Search stock (AAPL, TSLA, INFY)"
+                    required
+                >
+
+                <button type="submit">🚀 Predict</button>
+
+            </form>
+
+        </div>
+
+        <!-- ERROR -->
+        {% if error %}
+            <div class="error-box">
+                {{error}}
+            </div>
+        {% endif %}
+
+        <!-- SAFE VALUES -->
+        {% set p = prediction if prediction is not none else 0 %}
+        {% set pr = price if price is not none else 0 %}
+
+        <!-- CARDS -->
+        {% if price is not none %}
+
+        <div class="cards">
+
+            <div class="card glow">
+                <h4>💰 Current Price</h4>
+                <p class="{% if p > pr %}green{% elif p < pr %}red{% endif %}">
+                    ₹ {{price}}
+                </p>
+            </div>
+
+            <div class="card glow">
+                <h4>🔮 Prediction</h4>
+                <p class="{% if p > pr %}green{% elif p < pr %}red{% endif %}">
+                    ₹ {{prediction}}
+                </p>
+            </div>
+
+            <div class="card glow">
+                <h4>🎯 Confidence</h4>
+                <p>{{confidence}}%</p>
+            </div>
+
+            <div class="card glow">
+                <h4>🚦 Signal</h4>
+                <p>{{signal}}</p>
+            </div>
+
+            <div class="card glow">
+                <h4>📊 Accuracy</h4>
+                <p>{{accuracy}}%</p>
+            </div>
+
+        </div>
+
+        {% else %}
+            <p style="opacity:0.6;">
+                Enter a stock symbol to view prediction 📊
+            </p>
+        {% endif %}
+
+        <!-- CHART -->
+        {% if graphJSON %}
+
+        <div class="chart-box">
+
+            <h3>📊 Live Market Chart</h3>
+
+            <div id="chart"></div>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right">
+
+        <div class="profile glass">
+            <h3>👤 User</h3>
+            <p>{{session['user']}}</p>
+        </div>
+
+        {% if sentiment %}
+        <div class="sentiment glass">
+
+            <h3>🧠 Market Sentiment</h3>
+
+            <p>{{sentiment}}</p>
+
+            <div class="progress-bar">
+                <div class="positive" style="width: {{pos_percent}}%"></div>
+            </div>
+
+            <small>
+                Positive: {{pos_percent}}% |
+                Negative: {{neg_percent}}%
+            </small>
+
+        </div>
+        {% endif %}
+
+        <div class="history glass">
+
+            <h3>📜 Recent Trades</h3>
+
+            {% if history %}
+
+                {% for row in history[:5] %}
+                    <div class="history-item">
+                        <span>{{row[0]}}</span>
+                        <span>₹ {{row[1]}}</span>
+                    </div>
+                {% endfor %}
+
+            {% else %}
+                <p style="opacity:0.6;">No history yet</p>
+            {% endif %}
+
+            <a href="/download">
+                <button class="download">⬇ Download</button>
+            </a>
+
+            <form method="POST" action="/clear">
+                <button class="clear-btn">🗑 Clear</button>
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- PLOTLY -->
+<script>
+    var graph = {{graphJSON | safe}};
+    if(graph){
+        Plotly.newPlot('chart', graph.data, graph.layout);
+    }
+</script>
+
+<!-- AUTO REFRESH -->
+<script>
+    console.log("Auto refresh active");
+
+    setInterval(function(){
+        location.reload();
+    }, 30000);
+</script>
+
+</body>
+</html>
