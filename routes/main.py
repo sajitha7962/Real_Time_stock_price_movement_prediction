@@ -5,7 +5,7 @@ from services.stock_service import fetch, chart
 from services.news_service import get_news
 from models.nlp_model import analyze_sentiment
 import csv
-from models.db import get_all_users, get_all_history
+
 
 main = Blueprint("main", __name__)
 
@@ -241,21 +241,3 @@ def history_page():
     history = get_history(session["user"])
 
     return render_template("history.html", history=history)
-@main.route("/admin")
-def admin():
-
-    if "user" not in session:
-        return redirect("/login")
-
-    # Replace with your username
-    if session["user"] != "kadavule":
-        return "Unauthorized", 403
-
-    users = get_all_users()
-    history = get_all_history()
-
-    return render_template(
-        "admin.html",
-        users=users,
-        history=history
-    )
