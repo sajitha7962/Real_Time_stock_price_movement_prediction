@@ -9,3 +9,4 @@ plotly
 textblob
 requests
 ta
+python-dotenv
