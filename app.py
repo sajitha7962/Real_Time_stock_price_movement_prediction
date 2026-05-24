@@ -9,20 +9,20 @@ from routes.main import main
 def create_app():
     app = Flask(__name__)
 
-    # ✅ Load config
+    # Load configuration
     app.config.from_object(Config)
 
-    # 🔥 VERY IMPORTANT (for login/session)
+    # Secret key (for sessions/login)
     app.secret_key = "supersecretkey"
 
-    # ✅ Register Blueprints
+    # Register blueprints
     app.register_blueprint(auth)
     app.register_blueprint(main)
 
     return app
 
 
-# 🚀 Run app
+# Optional local run only (Render will NOT use this)
 if __name__ == "__main__":
     app = create_app()
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
