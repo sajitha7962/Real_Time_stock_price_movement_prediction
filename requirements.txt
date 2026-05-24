@@ -1,4 +1,4 @@
-Flask==2.3.3
+Flask
 gunicorn
 yfinance
 pandas
@@ -6,7 +6,5 @@ numpy
 scikit-learn
 xgboost
 plotly
-textblob
-requests
 ta
 python-dotenv
